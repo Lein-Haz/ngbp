@@ -1,6 +1,9 @@
 *.sw*
 *~
+/.idea
 build/
 bin/
 node_modules/
 vendor/
+.idea/libraries/ngbp_node_modules.xml
+.idea/jsLibraryMappings.xml

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- font awesome from BootstrapCDN -->
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
 
     <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
     <link rel="stylesheet" type="text/css" href="<%= file %>"/>
@@ -49,6 +49,12 @@
                     <a href ui-sref="about">
                         <i class="fa fa-info-circle"></i>
                         What is it?
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a href ui-sref="maps">
+                        <i class="fa fa-bed"></i>
+                        Mmm Sleep
                     </a>
                 </li>
                 <li>
