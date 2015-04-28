@@ -1,0 +1,43 @@
+<div class="jumbotron">
+    <h1>Non-Trivial AngularJS Made Easy</h1>
+
+    <p class="lead">
+        A fork of Josh Miller's ngBoilerplate which we are using for developer training purposes.
+    </p>
+
+    <p class="lead">
+        Everything you need to kickstart AngularJS projects: a best-practice
+        directory structure, an intelligent build system, and the best web design
+        libraries around.
+    </p>
+
+    <h2>dang so gotta do maps now</h2>
+
+    <div class="btn-group">
+        <a href="https://github.com/jcdickman/ngbp#readme" class="btn btn-large btn-default">
+            <i class="fa fa-book"></i>
+            Read the Docs
+        </a>
+        <a href="https://github.com/jcdickman/ngbp" class="btn btn-large btn-success">
+            <i class="fa fa-download"></i>
+            Download
+        </a>
+    </div>
+    <p>Leaving this for ideas</p>
+    <hr>
+    
+    <!-- TODO: formatting, css *sigh*
+    Learn maps *yay* -->
+    <div ng-app="forFun">
+        <div ng-controller="formController">
+            <form novalidate class="simple-form">
+                A city: <input type="text" ng-model="city"/><br/>
+                A country: <input type="text" ng-model="country"/><br/>
+                <input type="button" ng-click="lookUp(city)" value="GO!"/>
+            </form>
+            <h3>I entered {{city}}, here's a trophy</h3>
+        </div>
+        <!-- If I'm understancing correctly this should be out of scope right here -->
+    </div>
+
+</div>
