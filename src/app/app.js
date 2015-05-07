@@ -5,7 +5,8 @@ angular.module('ngBoilerplate', [
     'ngBoilerplate.about',
     'ui.router',
     'ngBoilerplate.maps',
-    'forFun'
+    'formFun',
+    'myGmap'
 ])
 
     .config(function myAppConfig($stateProvider, $urlRouterProvider) {
@@ -25,7 +26,7 @@ angular.module('ngBoilerplate', [
 ;
 
 //this is all copied from the getting started section
-angular.module('gmaps', ['uiGmapgoogle-maps'])
+angular.module('myGmap', ['uiGmapgoogle-maps'])
     .run(function run() {
     })
 
@@ -37,9 +38,13 @@ angular.module('gmaps', ['uiGmapgoogle-maps'])
         });
     })
 
-    .controller("someController", function($scope, uiGmapGoogleMapApi) {
+
+    .controller("gmapController", function($scope, uiGmapGoogleMapApi) {
         // Do stuff with your $scope.
         // Note: Some of the directives require at least something to be defined originally!
+        $scope.map = {center:{latitude:48.395661,longitude:9.989067}, zoom: 18};
+
+        var city = "Tokyo";
         // e.g. $scope.markers = []
 
         // uiGmapGoogleMapApi is a promise.

@@ -25,14 +25,44 @@ angular.module('ngBoilerplate.maps',[
     //TODO: good code goes here
 });
 
-angular.module('forFun',[
-    'ui.router'
+angular.module('formFun',[
+    'ui.router',
+    'myGmap'
 ])
     .controller('formController',['$scope',function($scope){
-        $scope.city = 'nothing yet';
+        $scope.query = {city: 'wee',
+            country : ''
+        };
 
         $scope.lookUp = function(input){
-            $scope.city = input;
+            $scope.country = input;
+
+
+
+
         };
     }])
+    .directive('formData',['$scope', function($scope){
+        function formLink(scope,element,attrs){
+            var city,
+                country;
+
+            city = $scope.query.city;
+            $scope.query.country = city;
+
+            //element.replaceWith(angular.element('<pre>' +  $element.text() + '</pre>'));//TODO: figure out what the balls am i doing
+        }
+
+        return {
+            link: formLink
+        };
+    }])
+
 ;
+/*angular.module('maps',['ui.router'])
+
+    .controller('atest',['$scope',function($scope){
+
+
+    }]
+);*/

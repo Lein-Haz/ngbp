@@ -30,7 +30,7 @@ module.exports = {
         ctpl: ['src/common/**/*.tpl.html'],
 
         html: ['src/index.html'],
-        less: 'src/less/main.less'
+        less: ['src/less/main.less','src/app/**/*.less']  //NOTE: So I was trying to figure out why my map was not showing up despite adding style to the map sheet
     },
 
     /**

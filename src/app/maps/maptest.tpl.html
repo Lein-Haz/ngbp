@@ -31,13 +31,19 @@
     <div ng-app="forFun">
         <div ng-controller="formController">
             <form novalidate class="simple-form">
-                A city: <input type="text" ng-model="city"/><br/>
-                A country: <input type="text" ng-model="country"/><br/>
+                A city: <input type="text" ng-model="query.city"/><br/>
+                A country: <input type="text" ng-model="query.country"/><br/>
                 <input type="button" ng-click="lookUp(city)" value="GO!"/>
             </form>
             <h3>I entered {{city}}, here's a trophy</h3>
+            <h2 form-data="">What the</h2>
         </div>
-        <!-- If I'm understancing correctly this should be out of scope right here -->
+        <!-- nested:  I like -->
+        <div height="600px" ng-app="myGmap" ng-controller="gmapController">
+
+            <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+            </ui-gmap-google-map>
+        </div>
     </div>
 
 </div>
