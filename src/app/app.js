@@ -5,7 +5,6 @@ angular.module('ngBoilerplate', [
     'ngBoilerplate.about',
     'ui.router',
     'ngBoilerplate.maps',
-    'formFun',
     'myGmap',
     'markers'
 ])

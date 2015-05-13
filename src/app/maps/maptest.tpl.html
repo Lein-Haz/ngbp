@@ -1,47 +1,63 @@
 <div class="jumbotron">
     <h1>Making Maps</h1>
 
-    <div class="btn-group">
-        <a href="https://github.com/jcdickman/ngbp#readme" class="btn btn-large btn-default">
-            <i class="fa fa-book"></i>
-            Read the Docs
-        </a>
-        <a href="https://github.com/jcdickman/ngbp" class="btn btn-large btn-success">
-            <i class="fa fa-download"></i>
-            Download
-        </a>
-    </div>
-    <p>Leaving this for ideas</p>
+    <p>Search by Street address or latitude and longitude, if you enter a address search will prefer that</p>
     <hr>
 
-    <div ng-app="formFun">
+    <div ng-app="ngBoilerplate.maps">
         <div ng-controller="formController">
             <form novalidate class="simple-form">
-                Street Address: <input type="text" ng-model="query.street"/><br/>
-                City: <input type="text" ng-model="query.city"/><br/>
-                State: <input type="text" ng-model="query.state"/><br/>
-                Zip: <input type="text" ng-model="query.zip"/><br/>
-                Country: <input type="text" ng-model="query.country"/><br/>
-                Latitude: <input type="number" ng-model="query.center.latitude"/><br/>
-                Longitude: <input type="number" ng-model="query.center.longitude"/><br/>
+                <table>
+                    <tr>
+                        <td>Address:</td>
+                        <td><input type="text" ng-model="query.street" title="Address:"/></td>
+                    </tr>
+                    <tr>
+                        <td>City:</td>
+                        <td><input type="text" ng-model="query.city"/></td>
+                    </tr>
+                    <tr>
+                        <td>State:</td>
+                        <td><input type="text" ng-model="query.state"/></td>
+                    </tr>
+                    <tr>
+                        <td>Zip:</td>
+                        <td><input type="text" ng-model="query.zip"/></td>
+                    </tr>
+                    <tr>
+                        <td>Country:</td>
+                        <td><input type="text" ng-model="query.country"/></td>
+                    </tr>
+                    <tr>
+                        <td>Latitude:</td>
+                        <td><input type="number" ng-model="query.center.latitude"/></td>
+                    </tr>
+                    <tr>
+                        <td>Longitude:</td>
+                        <td><input type="number" ng-model="query.center.longitude"/></td>
+                    </tr>
+                </table>
+                <br/>
             </form>
-            <h3>I entered {{mapViewVals}}, here's a trophy</h3>
-            <h3>Query is {{query}}</h3>
-            <h2 form-data="">What the</h2>
+            <!--<h3>Map is {{mapViewVals}} </h3>
+            <h3>Query is {{query}}</h3>-->
         </div>
-        <!-- nested:  I like -->
     </div>
-    <div class="btn-group">
-        <input type="button" ng-app="formFun" ng-controller="formController" ng-click="lookUp(query.street)" value="Locate Address"/>
-        <input type="button" ng-app="myGmap" ng-controller="gmapController" ng-click="mapThis(query.center.latitude, query.center.longitude)" value="Map it"/>
-        <input type="button" ng-app="myGmap" ng-controller="gmapController" ng-click="markUp()" value="Save location as marker"/>
-        <input type="button" ng-app="myGmap" ng-controller="gmapController" ng-click="deleteMarkers(query.center)" value="Delete all markers"/>
-    </div>
-    <div height="600px" ng-app="myGmap" ng-controller="gmapController">
 
-        <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true"
-                            event=
-                            "'google.maps.event.addListener($scope.map, 'click', function(){});'">
+    <div ng-app="myGmap" ng-controller="gmapController" class="btn-group map-group">
+        <input type="button" ng-app="myGmap" ng-controller="gmapController" ng-click="search()" value="Search" class="btn btn-large btn-danger">
+        <input type="button" ng-app="myGmap" ng-controller="gmapController" ng-click="markSearch()" value="Mark searched location" class="btn btn-large"/>
+        <input type="button" ng-app="ngBoilerplate.maps" ng-controller="formController" ng-click="focusMap()" value="Center on search" class="btn btn-large"/>
+        <input type="button" ng-app="myGmap" ng-controller="gmapController" ng-click="deleteMarkers()" value="Delete all markers" class="btn btn-large"/>
+    </div>
+
+    <div height="600px" ng-app="myGmap" ng-controller="gmapController" class="map-view">
+    <h5>Current center, Latitude: {{mapViewVals.center.latitude}}, Longitude: {{mapViewVals.center.longitude}}</h5>
+
+        <ui-gmap-google-map center="map.center"
+                            zoom="map.zoom"
+                            draggable="true"
+                            events="map.event">
             <ui-gmap-marker idKey="2" coords="map.center"></ui-gmap-marker>
             <ui-gmap-markers models="markerList.getMarkerList()" coords="'coords'" idKey="'idKey'">
                 <ui-gmap-window isIconVisibleOnClick="true">
@@ -51,7 +67,6 @@
                 </ui-gmap-window>
             </ui-gmap-markers>
         </ui-gmap-google-map>
-        <h3>Street {{street}}</h3>
     </div>
 
 </div>

@@ -12,30 +12,50 @@ angular.module('ngBoilerplate.maps',[
             url:'/maps',
             views: {
                 "main": {
-                    controller: 'mapController',
+                    controller: 'formController',
                     templateUrl: 'maps/maptest.tpl.html'
                 }
             },
             data: {
-                pageTitle:'This is a maptest!'
+                pageTitle:'Merps!'
             }
         });
     })
-    .controller ('mapController', function mapController($scope){
-    //TODO: good code goes here
+    .controller('formController',['$scope','formFactory','mapViewFactory',function($scope, formFactory, mapViewFactory){
+        //$scope.country = input;
 
-})
+        $scope.query = formFactory;
+        $scope.mapViewVals = mapViewFactory;
+
+        $scope.focusMap = function(){
+            angular.copy($scope.query.center,$scope.mapViewVals.center);
+        };
+    }])
 
 
+    //For the form! Query item so that the map isn't moving around
+    .factory('formFactory', function(){
+        var someCoords = {
+            street:'16253 Swingley Ridge Rd',
+            city: '',
+            state: '',
+            zip: '',
+            country : '',
+            zoom:'',
+            center: {
+                latitude: null,
+                longitude: null
+            }
+        };
+        return someCoords;
+    })
 ;
 
 
 
 angular.module('myGmap', [
     'uiGmapgoogle-maps',
-    'ui.router',
-    'formFun',
-    'markers'
+    'ui.router'
 ])
     .run(function run() {
     })
@@ -50,72 +70,73 @@ angular.module('myGmap', [
 
 
     .controller("gmapController", function($scope, uiGmapGoogleMapApi, formFactory, mapViewFactory, markerDataFactory) {
-            // Do stuff with your $scope.
-            // Note: Some of the directives require at least something to be defined originally!
-            //$scope.map = {center:{latitude:48.395661,longitude:9.989067}, zoom: 18};
-            $scope.mapViewVals = mapViewFactory;
-            $scope.query = formFactory;
-            $scope.map = {center: $scope.mapViewVals.center, zoom: $scope.mapViewVals.zoom};
-            $scope.markerList = markerDataFactory;
+        $scope.mapViewVals = mapViewFactory;//reference to map, basically values for the center of map
+        $scope.query = formFactory;//what you type into the forms cause i didn't want typing into forms to move map around
+        $scope.markerList = markerDataFactory;//the markers
 
-
-            /*$scope.myMarkers = [
-                {latitude:48,longitude:9, message: 'first one'}
-            ];*/
-            $scope.click = function(event){
-                $scope.query.state = "moving up";
-            };
-
-
-            var theMap = $scope.map;
+        // Do stuff with your $scope.
+        // Note: Some of the directives require at least something to be defined originally!
+        // function for assigning query values to map so that map position reflects query
+        function updateMapPos()
+        {
+            angular.copy($scope.query.center,$scope.mapViewVals.center);//update mapView
+        }
 
             // uiGmapGoogleMapApi is a promise.
             // The "then" callback function provides the google.maps object.
             uiGmapGoogleMapApi.then(function(maps) {
+                /*$scope.map = {center: $scope.mapViewVals.center, zoom: $scope.mapViewVals.zoom, events: [{click : clickHandler(maps,event,myArgs)}]};//it can't find clicker TODO: fix that
+                $scope.clickHandler = function(maps, event, myArgs){//clicker s right here
+                    $scope.query.state = "moving up";//just so I can see something happen
+                };*/
+                $scope.map = {center: $scope.mapViewVals.center, zoom: $scope.mapViewVals.zoom, events: [{click : function(maps, event, myArgs){//tried doing event inline no better
+                    $scope.query.state = "moving up";
+                }}]};
 
-                $scope.marker = {
-                    idKey: '2',
-                    coords: {
-                        latitude: 50,
-                        longitude: 9.989067
+
+                $scope.search = function(){
+
+                    /*if they entered something into street address prefer geocode look up
+                    otherwise search by Lat and Longi
+                    */
+                    if($scope.query.street !== ""){
+
+
+                        var geocoder = new google.maps.Geocoder();//instantiating geocoder
+
+                        //var bounds = $scope.map.getBounds();
+                        var tempCenter = {center: {latitude: 48.395661, longitude: 9.989067}};//temp var for copying. I think i did this cause of the reference thing
+
+                        geocoder.geocode({'address': $scope.query.street},//geocode query passing in address
+                            function (results, status)
+                            {
+                                if (status == google.maps.GeocoderStatus.OK)
+                                {
+                                    tempCenter.center.latitude = results[0].geometry.location.k;//set latitude
+                                    tempCenter.center.longitude = results[0].geometry.location.B;//set longitude
+                                    angular.copy(tempCenter.center, $scope.query.center); //update query's LatLongi
+                                    updateMapPos();
+
+                                    $scope.query.country = status;
+                                }else if(status == google.maps.GeocoderStatus.INVALID_REQUEST){
+                                    alert("No results for address entered");
+
+                                }
+                            }
+                        );
+                    } else { //search by lat&longi
+                        updateMapPos();
                     }
+
                 };
-
-
-                google.maps.event.addListener($scope.map, 'click', function(){
-                    $scope.query.state = "oh up here?";
-                });
-
-                //TODO: change function name
-                $scope.mapThis = function(lati,longi){
-
-                    var geocoder = new google.maps.Geocoder();
-                    var tempCenter = {center:{latitude:48.395661,longitude:9.989067}};
-
-                    geocoder.geocode({ 'address': $scope.query.street },
-                        function (results, status)
-                        {
-                            if (status == google.maps.GeocoderStatus.OK)
-                            {
-                                //$scope.map.center.latitude = results[0].geometry.location.B;
-                                //$scope.map.center.longitude = results[0].geometry.location.k;
-                                tempCenter.center.latitude = results[0].geometry.location.k;
-                                tempCenter.center.longitude = results[0].geometry.location.B;
-                                angular.copy(tempCenter.center,$scope.query.center);
-
-                                $scope.query.country = status;
-                            }
-                            else
-                            {
-                                $scope.mapViewVals.country = "shit";
-                            }
-                        }
-                    );
-                };
-                $scope.markUp = function(){
+                $scope.markSearch = function(){
                     $scope.markerList.addMarker($scope.query.center.latitude,$scope.query.center.longitude);
                 };
+                $scope.markCurrent = function () {
+                    $scope.markerList.addMarker($scope.mapViewVals.center.latitude,$scope.mapViewVals.center.longitude);
+                };
                 $scope.deleteMarkers = function(){$scope.markerList.killAllMarkers();};
+
 
                 /*$scope.myMarkers = [
                     {latitude:48,longitude:9, message: 'first one'}
@@ -135,15 +156,8 @@ angular.module('myGmap', [
                 };*/
             });
     })
-    .controller('clickEventController', ['$scope','$click','formFactory', function($scope, $click, formFactory){
-        $scope.click = function(event){
-            var qq = formFactory;
-            qq.state = "whooopdee";
-        };
 
-
-    }])
-        //this should define the map view
+        //this defines the map view
     .factory('mapViewFactory', function(){
             var service ={};
             var mapCoords = {
@@ -182,43 +196,5 @@ angular.module('myGmap', [
         })
 ;
 
-angular.module('formFun',[
-    'ui.router',
-    'myGmap'
-])
-    .controller('formController',['$scope','formFactory','mapViewFactory',function($scope, formFactory, mapViewFactory){
-        //$scope.country = input;
 
-        $scope.query = formFactory;
-        $scope.mapViewVals = mapViewFactory;
-
-
-
-        $scope.lookUp = function(input){
-            angular.copy($scope.query.center,$scope.mapViewVals.center);
-            //$scope.mapViewVals.setCenter($scope.query.center);
-            //$scope.map = {center: $scope.mapViewVals.getCenter(), zoom: $scope.mapViewVals.getZoom()};
-        };
-    }])
-
-
-    //this is for the form!
-    .factory('formFactory', function(){
-        var someCoords = {
-            street:'16253 Swingley Ridge Rd',
-            city: 'wee',
-            state: '',
-            zip: '63017',
-            country : '',
-            zoom:'',
-            center: {
-                latitude: 39.281894,
-                longitude: -76.613421
-            }
-        };
-
-        return someCoords;
-    })
-
-;
 
