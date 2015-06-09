@@ -81,17 +81,17 @@ angular.module('myGmap', [
         {
             angular.copy($scope.query.center,$scope.mapViewVals.center);//update mapView
         }
-
             // uiGmapGoogleMapApi is a promise.
             // The "then" callback function provides the google.maps object.
             uiGmapGoogleMapApi.then(function(maps) {
-                /*$scope.map = {center: $scope.mapViewVals.center, zoom: $scope.mapViewVals.zoom, events: [{click : clickHandler(maps,event,myArgs)}]};//it can't find clicker TODO: fix that
-                $scope.clickHandler = function(maps, event, myArgs){//clicker s right here
+                $scope.map = {center: $scope.mapViewVals.center, zoom: $scope.mapViewVals.zoom, event: {click : $scope.clickHandler}};//it can't find clicker TODO: fix that
+                //$scope.clickHandler = function(maps, event){//clicker s right here
+                $scope.clickHandler = function(){//clicker s right here
                     $scope.query.state = "moving up";//just so I can see something happen
-                };*/
-                $scope.map = {center: $scope.mapViewVals.center, zoom: $scope.mapViewVals.zoom, events: [{click : function(maps, event, myArgs){//tried doing event inline no better
+                };
+                /*$scope.map = {center: $scope.mapViewVals.center, zoom: $scope.mapViewVals.zoom, events: [{click : function(maps, event, myArgs){//tried doing event inline no better
                     $scope.query.state = "moving up";
-                }}]};
+                }}]};*/
 
 
                 $scope.search = function(){
